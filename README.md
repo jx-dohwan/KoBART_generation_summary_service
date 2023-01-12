@@ -19,6 +19,7 @@
 |Python Script->Jupyter Notebook|Python Script->Jupyter Notebook||
 |모델링까지만 진행|자체 웹에 Serving||
 |BOS, SEP 미사용|BOS, SEP사용|100%|
+|성능저하시키는 전처리|불필요한 전처리 기법 제거|100%|
 
 ---
 
