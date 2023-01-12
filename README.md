@@ -9,16 +9,16 @@
 
 ---
 
-## 🗓️ 프로젝트 진행
+## 🗓️ 프로젝트 구현 진행사항
 |기존 서비스|개선 서비스|진행사항(%)|
 |:---------:|:----------:|:------:|
 |테스트 데이터셋 미구축|테스트 데이터셋 구축||
 |일반 rouge사용|rouge를 한국어 전용으로 개선||
-|모델 미배포|Huggingface에 배포||
-|mecab으로 길이측정|model tokenizer로 길이측정||
+|모델 미배포|Huggingface에 배포|100%|
+|mecab으로 길이측정|model tokenizer로 길이측정|100%|
 |Jupyter Notebook|Python Script||
 |모델링까지만 진행|자체 웹에 Serving||
-|BOS, SEP 미사용|BOS, SEP사용||
+|BOS, SEP 미사용|BOS, SEP사용|100%|
 
 ---
 
