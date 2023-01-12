@@ -16,7 +16,7 @@
 |일반 rouge사용|rouge를 한국어 전용으로 개선||
 |모델 미배포|Huggingface에 배포|100%|
 |mecab으로 길이측정|model tokenizer로 길이측정|100%|
-|Jupyter Notebook|Python Script||
+|Python Script->Jupyter Notebook|Python Script->Jupyter Notebook||
 |모델링까지만 진행|자체 웹에 Serving||
 |BOS, SEP 미사용|BOS, SEP사용|100%|
 
