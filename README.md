@@ -18,7 +18,8 @@
 |mecab으로 길이측정|model tokenizer로 길이측정||
 |Jupyter Notebook|Python Script||
 |모델링까지만 진행|자체 웹에 Serving||
-|모든 대화를 하나의 데이터로 표시|대화간  데이터 구분|
+|BOS, SEP 미사용|BOS, SEP사용||
+
 ---
 
 ## 🗓️ 프로젝트 진행
