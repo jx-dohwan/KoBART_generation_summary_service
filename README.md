@@ -8,7 +8,26 @@
 ```
 
 ---
+## Start
+해당 모델은 HuggingFace에 업로드하여 pipeline으로 쉽게 사용할 수 있다.
+```
+pip install transformers==4.25.1
+```
+```
+from transformers import pipeline
 
+model_name = "jx7789/kobart_summary_v2"
+
+dialogue = ["다들 설날에 함 보자?", "며칠에 볼지는 안 정했지?", "ㅇㅇ 아직 안정함ㅋㄱㅋ", "ㅇㅋ", "설 당일은 다들 바쁠테고", "토요일이나 월 중에 보면 될려나", "토욜", "저녁 한끼하고", "볼링이나 칩시다"]
+
+gen_kwargs = {"length_penalty": 2.0, "num_beams":8, "max_length": 128}
+
+pipe = pipeline("summarization", model=model_name)
+print(pipe("[sep]".join(dialogue), **gen_kwargs)[0]["summary_text"])
+```
+##### output : 다들 설날에 볼지 아직 정하지 않았고 당일은 다들 바쁠 테니 토요일 저녁에 볼링이나 칩시다.
+
+---
 ## 🗓️ 프로젝트 개선 진행
 ### 모델링
 |기존 서비스|개선 서비스|진행사항(%)|
