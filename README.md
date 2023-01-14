@@ -8,7 +8,7 @@
 ```
 
 ---
-## Start
+## Model Test
 해당 모델은 HuggingFace에 업로드하여 pipeline으로 쉽게 사용할 수 있다.
 ```
 pip install transformers==4.25.1
