@@ -51,4 +51,5 @@ print(pipe("[sep]".join(dialogue), **gen_kwargs)[0]["summary_text"])
 ---
 
 ## 🗓️ 프로젝트 진행
+
 ---
