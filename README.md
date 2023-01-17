@@ -42,7 +42,7 @@ print(pipe("[sep]".join(dialogue), **gen_kwargs)[0]["summary_text"])
 |기존 서비스|개선 서비스|진행사항(%)|
 |:---------:|:----------:|:------:|
 |함수형 코드|Pytorch Lighting||
-|Jupyter Notebook|Jupyter Notebook||
+|Jupyter Notebook|Python Script||
 
 ### Serving
 |기존 서비스|개선 서비스|진행사항(%)|
