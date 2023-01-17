@@ -30,13 +30,13 @@ print(pipe("[sep]".join(dialogue), **gen_kwargs)[0]["summary_text"])
 ---
 ## 🗓️ 프로젝트 개선 진행
 ### 모델링
-|기존 서비스|개선 서비스|진행사항(%)|
-|:---------:|:----------:|:------:|
-|테스트 데이터셋 미구축|테스트 데이터셋 구축|100%|
-|모델 미배포|Huggingface에 배포|100%|
-|mecab으로 길이측정|model tokenizer로 길이측정|100%|
-|BOS, SEP 미사용|BOS, SEP사용|100%|
-|성능저하시키는 전처리|불필요한 전처리 기법 제거|100%|
+|기존 서비스|개선 서비스|진행사항(%)|링크|
+|:---------:|:----------:|:------:|:------:|
+|테스트 데이터셋 미구축|테스트 데이터셋 구축|100%|[link](https://github.com/jx-dohwan/KoBART_generation_summary_service/blob/main/kobart_summary.ipynb)|
+|모델 미배포|Huggingface에 배포|100%|[link](https://github.com/jx-dohwan/KoBART_generation_summary_service/blob/main/KoBART_Summary_v2_Test.ipynb)|
+|BOS, SEP 미사용|BOS, SEP사용|100%|[link](https://github.com/jx-dohwan/KoBART_generation_summary_service/blob/main/KoBART_Summary_v2.ipynb)|
+|mecab으로 길이측정|model tokenizer로 길이측정|100%|""|
+|성능저하시키는 전처리|불필요한 전처리 기법 제거|100%|""|
 
 ### 코드 객체지향화
 |기존 서비스|개선 서비스|진행사항(%)|
