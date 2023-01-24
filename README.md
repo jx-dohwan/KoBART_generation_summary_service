@@ -29,7 +29,6 @@ print(pipe("[sep]".join(dialogue), **gen_kwargs)[0]["summary_text"])
 ```
 ##### output : 다들 설날에 볼지 아직 정하지 않았고 당일은 다들 바쁠 테니 토요일 저녁에 볼링이나 칩시다.
 
----
 ## Service Test
 ```
 pip install transformers==4.25.1
