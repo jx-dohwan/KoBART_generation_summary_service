@@ -7,6 +7,8 @@
 3️⃣ 설명 : 기존의 Aiffel에서 진행한 대화문 생성요약 프로젝트를 베이스로 하여 KoBART 모델을 개선 및 서빙을 진행할 것 
 ```
 
+<img src="img/result_v1.png"/>
+
 ---
 ## Model Test
 해당 모델은 HuggingFace에 업로드하여 pipeline으로 쉽게 사용할 수 있다.
@@ -29,7 +31,6 @@ print(pipe("[sep]".join(dialogue), **gen_kwargs)[0]["summary_text"])
 
 ---
 ## Service Test
-
 ```
 pip install transformers==4.25.1
 pip install Flask 
