@@ -1,12 +1,6 @@
 import re
 
 
-
-
-
-import re
-
-
 def preprocess_sentence(sentence, v2=False):
     if v2==False:
       #sentence = sentence.lower() # 텍스트 소문자화
@@ -21,6 +15,14 @@ def preprocess_sentence(sentence, v2=False):
       sentence = re.sub(r'\[[^)]*\]', '', sentence) 
       sentence = sentence.strip() # 문장 양쪽 공백 제거
     return sentence
+
+def preprocess_result(sentence, v2=True):
+  result = []
+  for i in range(len(sentence)):
+    result.append(preprocess_sentence(sentence[i], v2).lower())
+  
+  return result
+
 
 
 

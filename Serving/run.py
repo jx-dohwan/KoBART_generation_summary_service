@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 from transformers import pipeline
-from preprocessor import preprocess_sentence
+from preprocessor import preprocess_sentence, preprocess_result
 from time_check import do_something
 import math
 import time
@@ -16,20 +16,21 @@ gen_kwargs = {"length_penalty": 1.2, "num_beams":8, "max_length": 128}
 def home():
     
     do_something()
-    result = []
     text_output = ""
     text_input = str(request.form.get('size'))
     if text_input:
-        text_input = preprocess_sentence(text_input)
-        for i in text_input:
-            result.append(preprocess_sentence(i, v2=True).lower())
         
-        pipe = pipeline("summarization", model=model_name)
+        text_input = preprocess_sentence(text_input)
+        result = preprocess_result(text_input)
+        del result[0]
+        print(result)
         start = time.time()
+        pipe = pipeline("summarization", model=model_name)
+        
         text_output = pipe('[sep]'.join(result), **gen_kwargs)[0]["summary_text"]
         end = time.time()
 
-        print(end - start)
+        print("걸린시간",end - start)
     return render_template('index.html', text_output=text_output)
 
 if __name__ == '__main__':
