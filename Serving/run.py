@@ -7,7 +7,7 @@ import time
 
 
 app = Flask(__name__)
-model_name = "jx7789/kobart_summary_v2"
+model_name = "jx7789/kobart_summary_v3"
 gen_kwargs = {"length_penalty": 1.2, "num_beams":8, "max_length": 128}
 
 
