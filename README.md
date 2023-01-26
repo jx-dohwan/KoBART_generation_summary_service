@@ -30,6 +30,7 @@ print(pipe("[sep]".join(dialogue), **gen_kwargs)[0]["summary_text"])
 ##### output : 다들 설날에 볼지 아직 정하지 않았고 당일은 다들 바쁠 테니 토요일 저녁에 볼링이나 칩시다.
 
 ## Service Test
+### 1. 로컬 Test
 ```
 pip install transformers==4.25.1
 pip install Flask 
@@ -37,6 +38,13 @@ pip install Flask
 ```
 python run.py
 ```
+### 1. Docker Test
+- Ubuntu-18.04(WSL) 환경에서 사용
+```
+docker build -t flask .
+docker run -d -p 3000:3000 flask
+```
+
 ---
 ## 🗓️ 프로젝트 개선 진행
 ### 모델링
