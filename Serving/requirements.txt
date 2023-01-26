@@ -1,0 +1,3 @@
+Flask
+transformers==4.25
+
