@@ -55,7 +55,7 @@ docker run -d -p 3000:3000 flask
 |BOS, SEP 미사용|BOS, SEP사용|100%|[link](https://github.com/jx-dohwan/KoBART_generation_summary_service/blob/main/make_models/KoBART_Summary_v2.ipynb)|
 |mecab으로 길이측정|model tokenizer로 길이측정|100%|""|
 |성능저하시키는 전처리|불필요한 전처리 기법 제거|100%|""|
-|일반 fine-tuning|도메인 적응|80%||
+|일반 fine-tuning|도메인 적응|100%||
 
 ### 코드 객체지향화
 |기존 서비스|개선 서비스|진행사항(%)|
