@@ -4,6 +4,7 @@ import re
 def preprocess_sentence(sentence, v2=False):
     if v2==False:
       #sentence = sentence.lower() # 텍스트 소문자화
+      sentence = re.sub(r"삭제된 메시지입니다.", "", sentence)
       sentence = re.sub(r'[ㄱ-ㅎㅏ-ㅣ]+[/ㄱ-ㅎㅏ-ㅣ]', '', sentence) # 여러개 자음과 모음을 삭제한다.
       sentence = re.sub(r'\[.*?\] \[.*?\]', ',', sentence) # 여러개 자음과 모음을 삭제한다.
       sentence = re.sub(r"[^가-힣a-z0-9#@,-\[\]\(\)]", " ", sentence) # 영어 외 문자(숫자, 특수문자 등) 공백으로 변환
