@@ -1,4 +1,5 @@
 
+<a href="https://small-ginger-184.notion.site/Upgrade-cdcf3d092d764362ace57d5bb9cc5f50"><img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=Notion&logoColor=white"></a>
 ## 💡프로젝트 소개
 ###  base project : [Base Project link](https://github.com/AIFFEL-NLP-PROJECT/Aiffelthon)
 ```
@@ -10,7 +11,7 @@
 <img src="img/result_v1.png"/>
 
 ---
-## Model Test
+## 1. Model Test
 해당 모델은 HuggingFace에 업로드하여 pipeline으로 쉽게 사용할 수 있다.
 ```
 pip install transformers==4.25.1
@@ -29,8 +30,8 @@ print(pipe("[sep]".join(dialogue), **gen_kwargs)[0]["summary_text"])
 ```
 ##### output : 다들 설날에 볼지 아직 정하지 않았고 당일은 다들 바쁠 테니 토요일 저녁에 볼링이나 칩시다.
 
-## Service Test
-### 1. 로컬 Test
+## 2. Service Test
+### 1) 로컬 Test
 ```
 pip install transformers==4.25.1
 pip install Flask 
@@ -38,7 +39,7 @@ pip install Flask
 ```
 python run.py
 ```
-### 2. Docker Test
+### 2) Docker Test
 - Ubuntu-18.04(WSL) 환경에서 사용
 ```
 docker build -t flask .
