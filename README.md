@@ -38,7 +38,7 @@ pip install Flask
 ```
 python run.py
 ```
-### 1. Docker Test
+### 2. Docker Test
 - Ubuntu-18.04(WSL) 환경에서 사용
 ```
 docker build -t flask .
