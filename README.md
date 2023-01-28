@@ -51,12 +51,12 @@ docker run -d -p 3000:3000 flask
 #### [최종 결과 코드 보러가기](https://github.com/jx-dohwan/KoBART_generation_summary_service/blob/main/make_models/KoBART_Summary_v3.ipynb)
 |기존 서비스|개선 서비스|진행사항(%)|링크|
 |:---------:|:----------:|:------:|:------:|
+|성능저하시키는 전처리|불필요한 전처리 기법 제거|100%||
+|mecab으로 길이측정|model tokenizer로 길이측정|100%||
 |테스트 데이터셋 미구축|테스트 데이터셋 구축|100%|[link](https://github.com/jx-dohwan/KoBART_generation_summary_service/blob/main/make_models/kobart_summary.ipynb)|
-|모델 미배포|Huggingface에 배포|100%|[link](https://huggingface.co/jx7789/kobart_summary_v3)|
 |BOS, SEP 미사용|BOS, SEP사용|100%|[link](https://github.com/jx-dohwan/KoBART_generation_summary_service/blob/main/make_models/KoBART_Summary_v2.ipynb)|
-|mecab으로 길이측정|model tokenizer로 길이측정|100%|""|
-|성능저하시키는 전처리|불필요한 전처리 기법 제거|100%|""|
 |일반 fine-tuning|도메인 적응|100%|[link](https://github.com/jx-dohwan/KoBART_generation_summary_service/blob/main/make_models/domain_adaptation.ipynb)|
+|모델 미배포|Huggingface에 배포|100%|[link](https://huggingface.co/jx7789/kobart_summary_v3)|
 
 ### 코드 객체지향화
 |기존 서비스|개선 서비스|진행사항(%)|
