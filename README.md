@@ -59,12 +59,6 @@ docker run -d -p 3000:3000 flask
 |일반 fine-tuning|[도메인 적응](https://github.com/jx-dohwan/KoBART_generation_summary_service/blob/main/make_models/domain_adaptation.ipynb)|100%|0.2526|
 |모델 미배포|[Huggingface에 배포](https://huggingface.co/jx7789/kobart_summary_v3)|100%||
 
-### 코드 객체지향화
-|기존 서비스|개선 서비스|진행사항(%)|
-|:---------:|:----------:|:------:|
-|함수형 코드|Pytorch Lighting||
-|Jupyter Notebook|Python Script||
-
 ### Serving
 개선 서비스|진행사항(%)|
 |:----------:|:------:|
@@ -73,8 +67,13 @@ docker run -d -p 3000:3000 flask
 |도커 빌드|100%|
 |AWS EC2 배포|70%|
 
+### 코드 객체지향화
+|기존 서비스|개선 서비스|진행사항(%)|
+|:---------:|:----------:|:------:|
+|함수형 코드|Pytorch Lighting||
+|Jupyter Notebook|Python Script||
+
 ---
 
-## 🗓️ 프로젝트 진행
 
 ---
