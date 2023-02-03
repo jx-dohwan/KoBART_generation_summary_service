@@ -7,7 +7,7 @@ import pytorch_lightning as pl
 import torch
 from pytorch_lightning import loggers as pl_loggers
 from torch.utils.data import DataLoader, Dataset
-from dataset import KobartSummaryModule
+from dataset import KoBARTSummaryModule
 from transformers import BartForConditionalGeneration, PreTrainedTokenizerFast
 from transformers.optimization import AdamW, get_cosine_schedule_with_warmup
 
@@ -32,17 +32,21 @@ class ArgsBase():
 
         parser.add_argument('--test_file',
                             type=str,
-                            default='data/test.tsv',
+                            default='data/val.tsv',
                             help='test file')
 
         parser.add_argument('--batch_size',
                             type=int,
                             default=14,
                             help='')
-        parser.add_argument('--max_len',
+        parser.add_argument('--text_max_len',
                             type=int,
-                            default=512,
-                            help='max seq len')
+                            default=256,
+                            help='text max seq len')
+        parser.add_argument('--summary_max_len',
+                            type=int,
+                            default=64,
+                            help='summary max seq len')
         return parser
 
 class Base(pl.LightningModule):
@@ -116,12 +120,22 @@ class Base(pl.LightningModule):
 class KoBARTConditionalGeneration(Base):
     def __init__(self, hparams, trainer=None, **kwargs):
         super(KoBARTConditionalGeneration, self).__init__(hparams, trainer, **kwargs)
-        self.model = BartForConditionalGeneration.from_pretrained('gogamza/kobart-base-v1')
+        self.model = BartForConditionalGeneration.from_pretrained('gogamza/kobart-base-v2')
         self.model.train()
         self.bos_token = '<s>'
         self.eos_token = '</s>'
         
-        self.tokenizer = PreTrainedTokenizerFast.from_pretrained('gogamza/kobart-base-v1')
+        self.tokenizer = PreTrainedTokenizerFast.from_pretrained('gogamza/kobart-base-v2')
+        special_words = [
+                        "#@주소#", "#@이모티콘#", "#@이름#", "#@URL#", "#@소속#",
+                        "#@기타#", "#@전번#", "#@계정#", "#@url#", "#@번호#", "#@금융#", "#@신원#",
+                        "#@장소#", "#@시스템#사진#", "#@시스템#동영상#", "#@시스템#기타#", "#@시스템#검색#",
+                        "#@시스템#지도#", "#@시스템#삭제#", "#@시스템#파일#", "#@시스템#송금#", "#@시스템#",
+                        "#개인 및 관계#", "#미용과 건강#", "#상거래(쇼핑)#", "#시사/교육#", "#식음료#", 
+                        "#여가 생활#", "#일과 직업#", "#주거와 생활#", "#행사#","[sep]"
+                        ]
+        self.tokenizer.add_special_tokens({"additional_special_tokens": special_words})
+        self.model.resize_token_embeddings(len(tokenizer))
         self.pad_token_id = self.tokenizer.pad_token_id
 
     def forward(self, inputs):
@@ -156,17 +170,18 @@ class KoBARTConditionalGeneration(Base):
 if __name__ == '__main__':
     parser = Base.add_model_specific_args(parser)
     parser = ArgsBase.add_model_specific_args(parser)
-    parser = KobartSummaryModule.add_model_specific_args(parser)
+    parser = KoBARTSummaryModule.add_model_specific_args(parser)
     parser = pl.Trainer.add_argparse_args(parser)
     tokenizer = PreTrainedTokenizerFast.from_pretrained('gogamza/kobart-base-v1')
     args = parser.parse_args()
     logging.info(args)
 
-    dm = KobartSummaryModule(args.train_file,
+    dm = KoBARTSummaryModule(args.train_file,
                         args.test_file,
                         tokenizer,
                         batch_size=args.batch_size,
-                        max_len=args.max_len,
+                        text_max_len=args.text_max_len,
+                        summary_max_len=args.summary_max_len,
                         num_workers=args.num_workers)
     
     checkpoint_callback = pl.callbacks.ModelCheckpoint(monitor='val_loss',

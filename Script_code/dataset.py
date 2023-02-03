@@ -14,84 +14,13 @@ import json
 import re
 from transformers.tokenization_utils import PreTrainedTokenizerBase
 
-def load_json_data(path):
-
-    with open(path) as f:
-        data = json.load(f)
-
-    ids = []
-    dialogues = []
-    summaries = []
-    topic = []
-    for datum in data["data"]:
-        ids.append(datum["header"]["dialogueInfo"]["dialogueID"])
-
-        prev_speaker_id = None
-        prev_line = ""
-        utts = []
-        for dialogue in datum["body"]["dialogue"]:
-            utterance = dialogue["utterance"].strip()
-
-            if dialogue["participantID"] == prev_speaker_id:
-                prev_line += " " + utterance
-            else:
-                if prev_line:
-                    utts.append(prev_line)
-                prev_line = utterance
-                prev_speaker_id = dialogue["participantID"]
-        if prev_line:
-            utts.append(prev_line)
-
-        dialogues.append(utts)
-        summaries.append(datum["body"].get("summary"))
-
-    for i in range(len(data['data'])):
-      topic.append(data['data'][i]['header']['dialogueInfo']['topic'])
-    return ids, dialogues, summaries, topic
-
-def data_load(filename, is_meta=False):
-    ids_list, dialogues_list, summaries_list, topic_list = [], [], [], []
-    dialogues_sep = []
-
-    for file in tqdm(filename):
-      ids, dialogues, summaries, topic = load_json_data(file)
-      for id, text, summ, top in zip(ids, dialogues, summaries, topic):
-        ids_list.append(id)
-        if is_meta:
-          text.insert(0,"#"+top+"#")
-        dialogues_list.append(text)
-        summaries_list.append(summ)
-        topic_list.append(top)
-    
-    for text in tqdm(dialogues_list):
-      dialogues_sep.append("[sep]".join(text))
-
-    return ids_list, dialogues_sep, summaries_list
-
-def preprocess_sentence(sentence):
-    sentence = sentence.lower() # 텍스트 소문자화
-    sentence = re.sub(r'[ㄱ-ㅎㅏ-ㅣ]+[/ㄱ-ㅎㅏ-ㅣ]', '', sentence) # 여러개 자음과 모음을 삭제한다.
-    sentence = re.sub("[^가-힣a-z0-9#@,-]", " ", sentence) # 영어 외 문자(숫자, 특수문자 등) 공백으로 변환
-    sentence = re.sub(r'[" "]+', " ", sentence) # 여러개 공백을 하나의 공백으로 바꿉니다.
-    sentence = sentence.strip() # 문장 양쪽 공백 제거
-    
-    return sentence
-
-def path(file):
-    filenames = os.listdir(file) 
-    full_filename = []
-
-    for filename in filenames:
-        fn2 = os.path.join(file, filename)
-        full_filename.append(fn2)
-
-    return full_filename
 
 class KoBARTSummaryDataset(Dataset):
-    def __init__(self, file, tokenizer, max_len, ignore_index=-100):
+    def __init__(self, file, tokenizer, text_max_len, summary_max_len,  ignore_index=-100):
         super().__init__()
         self.tokenizer = tokenizer
-        self.max_len = max_len
+        self.text_max_len = text_max_len
+        self.summary_max_len = summary_max_len
         self.docs = file
         self.docs = pd.read_csv(file, sep='\t')
         self.len = self.docs.shape[0]
@@ -99,17 +28,24 @@ class KoBARTSummaryDataset(Dataset):
         self.pad_index = self.tokenizer.pad_token_id
         self.ignore_index = ignore_index
 
-    def add_ignored_data(inputs, max_len, ignore_index):
-        if len(inputs) < max_len:
-            pad = [ignore_index] *(max_len - len(inputs)) # ignore_index즉 -100으로 패딩을 만들 것인데 max_len - lne(inpu)
+
+    def add_ignored_data(self, inputs):
+        if len(inputs) < self.summary_max_len:
+            pad = [self.ignore_index] * (self.summary_max_len - len(inputs)) # ignore_index즉 -100으로 패딩을 만들 것인데 max_len - lne(inpu)
             inputs = np.concatenate([inputs, pad])
         else:
-            inputs = inputs[:max_len]
+            inputs = inputs[:self.summary_max_len]
 
         return inputs
 
-    def add_padding_data(inputs, max_len):
+    def add_padding_data(self, inputs, is_summary=False):
+        if is_summary == False:
+            max_len = self.text_max_len
+        else:
+            max_len = self.summary_max_len
+
         pad_index = pad_index
+
         if len(inputs) < max_len:
             pad = [pad_index] *(max_len - len(inputs))
             inputs = np.concatenate([inputs, pad])
@@ -119,13 +55,91 @@ class KoBARTSummaryDataset(Dataset):
         return inputs 
 
     def __getitem__(self, idx):
+        instance = self.docs.iloc[idx]
+        input_ids = self.tokenizer.encode(instance['dialogues'], add_special_tokens=False)
+        input_ids = self.add_padding_data(input_ids)
 
-@staticmethod
+        label_ids = self.tokenizer.encode(instance['summaries'])
+        label_ids.append(self.tokenizer.eos_token_id)
+        dec_input_ids = self.tokenizer('')['input_ids']
+        dec_input_ids += label_ids[:-1]
+        dec_input_ids = self.add_padding_data(dec_input_ids, is_summary=True)
+        label_ids = self.add_ignored_data(label_ids)
+
+        return {'input_ids': np.array(input_ids, dtype=np.int_),
+                'decoder_input_ids': np.array(dec_input_ids, dtype=np.int_),
+                'labels': np.array(label_ids, dtype=np.int_)}
+
+
+
 class KoBARTSummaryModule(pl.LightningDataModule):
     def __init__(self,
                 train_file,
                 test_file,
                 tok,
-                max_len=256,
-                batch_size=256)
+                text_max_len=256,
+                summary_max_len=64,
+                batch_size=256,
+                num_workers=4):
+        super().__init__()
+        self.batch_size = batch_size
+        self.text_max_len = text_max_len
+        self.summary_max_len = summary_max_len
+        self.train_file_path = train_file
+        self.test_file_path = test_file
+        self.tok = tok
+        self.num_workers = num_workers
+
+    @staticmethod
+    def add_model_specific_args(parent_parser):
+        parser = argparse.ArgumentParser(
+            parents = [parent_parser], add_help=False            
+        )
+        parser.add_argument('--num_workers',
+                            type=int,
+                            default=4,
+                            help='num of worker for dataloader')
+        return parser
+
+    # OPTIONAL, called for every GPU/machine(assingning state is OK)
+    def setup(self, stage):
+        # split dataset
+        self.train = KoBARTSummaryDataset(
+                                        self.train_file_path,
+                                        self.tok,
+                                        self.text_max_len,
+                                        self.summary_max_len
+
+                    )
+        self.test = KoBARTSummaryDataset(
+                                        self.test_file_path,
+                                        self.tok,
+                                        self.text_max_len,
+                                        self.summary_max_len
+                    )
+
+    def train_dataloader(self):
+        train = DataLoader(
+                        self.train, 
+                        batch_size=self.batch_size,
+                        num_workers=self.num_workers, shuffle=True        
+                )
+        return train
+
+    
+    def val_dataloader(self):
+        val = DataLoader(
+                        self.test, 
+                        batch_size=self.batch_size,
+                        num_workers=self.num_workers, shuffle=False        
+                )
+        return val
+
+    def test_dataloader(self):
+        test = DataLoader(
+                        self.test, 
+                        batch_size=self.batch_size,
+                        num_workers=self.num_workers, shuffle=False        
+                )
+        return test
         
