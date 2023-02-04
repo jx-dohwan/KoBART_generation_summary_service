@@ -70,8 +70,8 @@ docker run -d -p 3000:3000 flask
 ### 3. 코드 객체지향화
 |기존 서비스|개선 서비스|진행사항(%)|
 |:---------:|:----------:|:------:|
-|함수형 코드|Pytorch Lighting|20%|
-|Jupyter Notebook|Python Script|20%|
+|함수형 코드|Pytorch Lighting|40%|
+|Jupyter Notebook|Python Script|40%|
 
 ---
 
