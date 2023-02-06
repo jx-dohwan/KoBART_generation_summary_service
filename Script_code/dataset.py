@@ -44,7 +44,7 @@ class KoBARTSummaryDataset(Dataset):
         else:
             max_len = self.summary_max_len
 
-        pad_index = pad_index
+        pad_index = self.pad_index
 
         if len(inputs) < max_len:
             pad = [pad_index] *(max_len - len(inputs))
@@ -55,6 +55,7 @@ class KoBARTSummaryDataset(Dataset):
         return inputs 
 
     def __getitem__(self, idx):
+        print("idx",idx)
         instance = self.docs.iloc[idx]
         input_ids = self.tokenizer.encode(instance['dialogues'], add_special_tokens=False)
         input_ids = self.add_padding_data(input_ids)
@@ -65,10 +66,15 @@ class KoBARTSummaryDataset(Dataset):
         dec_input_ids += label_ids[:-1]
         dec_input_ids = self.add_padding_data(dec_input_ids, is_summary=True)
         label_ids = self.add_ignored_data(label_ids)
-
+        print("input_ids :", input_ids )
+        print("label_ids", label_ids)
+        print("dec_input_ids", dec_input_ids)
         return {'input_ids': np.array(input_ids, dtype=np.int_),
                 'decoder_input_ids': np.array(dec_input_ids, dtype=np.int_),
                 'labels': np.array(label_ids, dtype=np.int_)}
+
+    def __len__(self):
+        return self.len
 
 
 
