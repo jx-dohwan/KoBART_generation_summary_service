@@ -65,7 +65,7 @@ docker run -d -p 3000:3000 flask
 |:----------:|:------:|
 |[웹 구현](https://github.com/jx-dohwan/KoBART_generation_summary_service/tree/main/Serving)|100%|
 |[전처리 속도 개선](https://github.com/jx-dohwan/KoBART_generation_summary_service/blob/main/Serving/preprocessor.py)|100%|
-|도커 빌드(https://github.com/jx-dohwan/KoBART_generation_summary_service/blob/main/Serving/Dockerfile)|100%|
+|[도커 빌드](https://github.com/jx-dohwan/KoBART_generation_summary_service/blob/main/Serving/Dockerfile)|100%|
 
 ### 3. 코드 객체지향화
 |기존 서비스|개선 서비스|진행사항(%)|
