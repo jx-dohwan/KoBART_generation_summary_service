@@ -1,5 +1,4 @@
 
-<a href="https://small-ginger-184.notion.site/Upgrade-cdcf3d092d764362ace57d5bb9cc5f50"><img src="https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=Notion&logoColor=white"></a>
 ## 💡프로젝트 소개
 ###  base project : [Base Project link](https://github.com/AIFFEL-NLP-PROJECT/Aiffelthon)
 ```
