@@ -11,7 +11,7 @@
 
 ### 해당 프로젝트에 관한 자세한 설명은 블로그에 정리해 놓았다.<br>
 - [KoBART를 활용한 카카오톡 대화 요약 서비스_1(feat.개요와 데이터)](https://velog.io/@jx7789/%EC%B9%B4%EC%B9%B4%EC%98%A4%ED%86%A1-%EB%8C%80%ED%99%94-%EC%9A%94%EC%95%BD-%EC%84%9C%EB%B9%84%EC%8A%A4-pepkrzfe)<br>
-- [KoBART를 용한 카카오톡 대화 요약 서비스_2(feat.모델과 평가)](https://velog.io/@jx7789/KoBART%EB%A5%BC-%ED%95%A0%EC%9A%A9%ED%95%9C-%EC%B9%B4%EC%B9%B4%EC%98%A4%ED%86%A1-%EB%8C%80%ED%99%94-%EC%9A%94%EC%95%BD-%EC%84%9C%EB%B9%84%EC%8A%A42feat.%EB%AA%A8%EB%8D%B8%EA%B3%BC-%ED%8F%89%EA%B0%80)
+- [KoBART를 활용한 카카오톡 대화 요약 서비스_2(feat.모델과 평가)](https://velog.io/@jx7789/KoBART%EB%A5%BC-%ED%95%A0%EC%9A%A9%ED%95%9C-%EC%B9%B4%EC%B9%B4%EC%98%A4%ED%86%A1-%EB%8C%80%ED%99%94-%EC%9A%94%EC%95%BD-%EC%84%9C%EB%B9%84%EC%8A%A42feat.%EB%AA%A8%EB%8D%B8%EA%B3%BC-%ED%8F%89%EA%B0%80)
 - [KoBART를 활용한 카카오톡 대화 요약 서비스_3(feat.생성 전력과 허깅페이스)](https://velog.io/@jx7789/KoBART%EB%A5%BC-%ED%99%9C%EC%9A%A9%ED%95%9C-%EC%B9%B4%EC%B9%B4%EC%98%A4%ED%86%A1-%EB%8C%80%ED%99%94-%EC%9A%94%EC%95%BD-%EC%84%9C%EB%B9%84%EC%8A%A43feat.%EC%83%9D%EC%84%B1-%EC%A0%84%EB%A0%A5%EA%B3%BC-%ED%97%88%EA%B9%85%ED%8E%98%EC%9D%B4%EC%8A%A4)
 - [KoBART를 활용한 카카오톡 대화 요약 서비스_4(feat.서빙)](https://velog.io/@jx7789/KoBART%EB%A5%BC-%ED%99%9C%EC%9A%A9%ED%95%9C-%EC%B9%B4%EC%B9%B4%EC%98%A4%ED%86%A1-%EB%8C%80%ED%99%94-%EC%9A%94%EC%95%BD-%EC%84%9C%EB%B9%84%EC%8A%A44feat.%EC%84%9C%EB%B9%99)
 
