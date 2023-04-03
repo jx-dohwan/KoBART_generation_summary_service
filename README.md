@@ -54,7 +54,7 @@ docker run -d -p 3000:3000 flask
 ---
 ## 🗓️ 프로젝트 개선 진행
 ### 1. 모델링
-#### [최종 결과 코드 보러가기](https://github.com/jx-dohwan/KoBART_generation_summary_service/blob/main/make_models/KoBART_Summary_v3.ipynb)
+#### [최종 결과 코드 보러가기](https://github.com/jx-dohwan/KoBART_generation_summary_service/blob/main/make_models/kobart_summary_v3.py)
 |기존 서비스|개선 서비스|진행사항(%)|RougeL F1|
 |:---------:|:----------:|:------:|:------:|
 |성능저하시키는 전처리|불필요한 전처리 기법 제거|100%||
