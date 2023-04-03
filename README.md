@@ -62,7 +62,7 @@ docker run -d -p 3000:3000 flask
 |학습, 검증 데이터 동일한 전처리 적용|학습, 검증 데이터 전처리 구분|100%||
 |테스트 데이터셋 미구축|[테스트 데이터셋 구축](https://github.com/jx-dohwan/KoBART_generation_summary_service/blob/main/make_models/kobart_summary.ipynb)|100%|0.2386|
 |BOS, SEP 미사용|[BOS, SEP사용](https://github.com/jx-dohwan/KoBART_generation_summary_service/blob/main/make_models/KoBART_Summary_v2.ipynb)|100%|0.2439|
-|일반 fine-tuning|[도메인 적응](https://github.com/jx-dohwan/KoBART_generation_summary_service/blob/main/make_models/domain_adaptation.ipynb)|100%|0.2526|
+|일반 fine-tuning|[도메인 적응](https://github.com/jx-dohwan/KoBART_generation_summary_service/blob/main/make_models/domain_adaptation.py)|100%|0.2526|
 |모델 미배포|[fine-tuning](https://huggingface.co/jx7789/kobart_summary_v3)<br>[post-pretrain](https://huggingface.co/jx7789/kobart_post_pratrain)|100%||
 
 ### 2. Serving
