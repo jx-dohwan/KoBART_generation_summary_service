@@ -64,6 +64,8 @@ docker run -d -p 3000:3000 flask
 |BOS, SEP 미사용|[BOS, SEP사용](https://github.com/jx-dohwan/KoBART_generation_summary_service/blob/main/make_models/KoBART_Summary_v2.ipynb)|100%|0.2439|
 |일반 fine-tuning|[도메인 적응](https://github.com/jx-dohwan/KoBART_generation_summary_service/blob/main/make_models/domain_adaptation.py)|100%|0.2526|
 |모델 미배포|[fine-tuning](https://huggingface.co/jx7789/kobart_summary_v3)<br>[post-pretrain](https://huggingface.co/jx7789/kobart_post_pratrain)|100%||
+|.py로 재구현|||
+|post-train에서 masking만 손실함수 계산|||
 
 ### 2. Serving
 개선 서비스|진행사항(%)|
