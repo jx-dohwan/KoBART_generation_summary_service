@@ -79,4 +79,5 @@ docker run -d -p 3000:3000 flask
 |post-train 모든 토큰 loss 계산|masking만 loss 계산|||
 |post-train meta data 미적용|post-train meta data 적용|||
 |잘못된 비율로 적용된 masking|masking 적용 개선|||
+|잘못된 datacollator 사용|직접 datacollator 구현||
 ---
