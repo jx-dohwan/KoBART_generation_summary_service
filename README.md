@@ -77,4 +77,5 @@ docker run -d -p 3000:3000 flask
 |:---------:|:----------:|:------:|:------:|
 |.ipynb로 구현|.py로 현업에 맞게 재구현||| 
 |post-train 모든 토큰 loss 계산|masking만 loss 계산|||
+|post-train meta data 미적용|post-train meta data 적용|||
 ---
