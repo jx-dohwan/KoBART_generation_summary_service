@@ -10,7 +10,6 @@ import re
 import os
 import json
 from datasets import Dataset
-from rouge import Rouge
 from transformers import (
     AutoTokenizer,
     Seq2SeqTrainingArguments,
@@ -112,16 +111,15 @@ def main(config):
 
     train_tokenize_data = train_data.map(partial(preprocess_data, config=config, tokenizer=tokenizer), batched = True, remove_columns=['Text'])
     val_tokenize_data = val_data.map(partial(preprocess_data, config=config, tokenizer=tokenizer), batched = True, remove_columns=['Text'])
-    print(train_tokenize_data[0])
-    print(val_tokenize_data[0])
+   
     """model"""
     model.resize_token_embeddings(len(tokenizer))
-    model.config.max_length = config.max_len 
+    # model.config.max_length = config.max_len 여기서 이거 지우고 테스트 출력할 때 max_len 지정하기
     model.config.no_repeat_ngram_size = config.no_repeat_ngram_size
     model.config.length_penalty = config.length_penalty
     model.config.num_beams = config.num_beams
 
-    """ train """
+    ## train
     n_warmup_steps = int(len(train_tokenize_data) * config.warmup_ratio)
    
     training_args = Seq2SeqTrainingArguments(
@@ -143,7 +141,8 @@ def main(config):
         warmup_steps=n_warmup_steps,
 
     )
-    
+    # 이거쓰면 torch.tensor안해도됨
+    # data_collator = DataCollatorForSeq2Seq(tokenizer, model=model)
 
     trainer = Seq2SeqTrainer(
         model, 
@@ -151,11 +150,11 @@ def main(config):
         train_dataset=train_tokenize_data,
         eval_dataset=val_tokenize_data,
         tokenizer=tokenizer,
-     
+        # data_collator = data_collator
     )
     
     trainer.train()
-  
+    
 
 
 
