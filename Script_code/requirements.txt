@@ -1,7 +1,0 @@
-transformers
-datasets
-rouge
-wandb
-pytorch-lightning
-transformers
-tensorboard
