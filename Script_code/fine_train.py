@@ -16,7 +16,7 @@ from transformers import (
     Seq2SeqTrainingArguments,
     Seq2SeqTrainer,
     DataCollatorForSeq2Seq,
-    AutoModelForMaskedLM,
+    AutoModelForSeq2SeqLM,
 
 
 
@@ -32,7 +32,7 @@ import wandb
 import sys
 sys.path.append('/content/drive/MyDrive/인공지능/생성요약프로젝트/Model/script')
 from fine_dataset import data_load, data_process, preprocess_data
-from rouge import compute_metrics               
+from rouge_test import compute_metrics               
 
 
 def define_argparser():
@@ -48,7 +48,8 @@ def define_argparser():
     p.add_argument('--num_beams', type=int, default=5)
     p.add_argument('--length_penalty', type=float, default=2.0)
     p.add_argument('--ignore_index', type=int, default=-100)
-    p.add_argument('--max_len', type=int, default=128)
+    p.add_argument('--train_max_len', type=int, default=128)
+    p.add_argument('--valid_max_len', type=int, default=64)
     p.add_argument('--batch_size', type=int, default=128)
     p.add_argument('--lr', type=float, default=3e-05)
     p.add_argument('--weight_decay', type=float, default=0.1)
@@ -99,7 +100,7 @@ def main(config):
 
     """tokenizer"""
     tokenizer = AutoTokenizer.from_pretrained(config.checkpoint)
-    model = AutoModelForMaskedLM.from_pretrained(config.checkpoint)
+    model = AutoModelForSeq2SeqLM.from_pretrained(config.checkpoint)
 
     if config.post_train_notapply:
         special_words = [
