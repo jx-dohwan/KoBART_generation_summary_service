@@ -89,22 +89,26 @@ def add_ignored_data(inputs, config, corrupt_token, tokenizer, is_mlm=False):
               none_mask.append(i)
       for mask_num in none_mask:
           inputs[mask_num] = config.ignore_index
-      if len(inputs)+1 < config.max_len:
-          pad = [config.ignore_index] * (config.max_len - (len(inputs)+1)) # ignore_index즉 -100으로 패딩을 만들 것인데 max_len - lne(inpu)
+      if len(inputs)+1 < config.valid_max_len:
+          pad = [config.ignore_index] * (config.valid_max_len - (len(inputs)+1)) # ignore_index즉 -100으로 패딩을 만들 것인데 max_len - lne(inpu)
           inputs = np.concatenate([inputs, [tokenizer.eos_token_id], pad])
       else:
           inputs = inputs + [tokenizer.eos_token_id]
-          inputs = inputs[:config.max_len]
+          inputs = inputs[:config.valid_max_len]
   else:
-      if len(inputs) < config.max_len:
-          pad = [config.ignore_index] *(config.max_len - len(inputs)) # ignore_index즉 -100으로 패딩을 만들 것인데 max_len - lne(inpu)
+      if len(inputs) < config.valid_max_len:
+          pad = [config.ignore_index] *(config.valid_max_len - len(inputs)) # ignore_index즉 -100으로 패딩을 만들 것인데 max_len - lne(inpu)
           inputs = np.concatenate([inputs, pad])
       else:
-          inputs = inputs[:config.max_len]
+          inputs = inputs[:config.valid_max_len]
 
   return inputs
 
-def add_padding_data(inputs, config, tokenizer, is_mlm=False):
+def add_padding_data(inputs, config, tokenizer, is_mlm=False, is_train=True):
+    if is_train:
+        max_len = config.train_max_len
+    else:
+        max_len = config.valid_max_len
 
     if is_mlm:
         mask_num = int(len(inputs)*config.masking_rate)
@@ -118,17 +122,17 @@ def add_padding_data(inputs, config, tokenizer, is_mlm=False):
             else:
                 corrupt_token.append(inputs[pos])
 
-        if len(corrupt_token) < config.max_len:
-            pad = [tokenizer.pad_token_id] * (config.max_len - len(corrupt_token))
+        if len(corrupt_token) < max_len:
+            pad = [tokenizer.pad_token_id] * (max_len - len(corrupt_token))
             inputs = np.concatenate([corrupt_token, pad])
         else:
-            inputs = corrupt_token[:config.max_len]
+            inputs = corrupt_token[:max_len]
     else:
-        if len(inputs) < config.max_len:
-            pad = [tokenizer.pad_token_id] * (config.max_len - len(inputs))
+        if len(inputs) < max_len:
+            pad = [tokenizer.pad_token_id] * (max_len - len(inputs))
             inputs = np.concatenate([inputs, pad])
         else:
-            inputs = inputs[:config.max_len]
+            inputs = inputs[:max_len]
 
     return inputs
 
@@ -140,11 +144,11 @@ def preprocess_data(data_to_process, tokenizer, config):
     input_ids = []    
 
     for i in range(len(data_to_process['Text'])):
-        input_ids.append(add_padding_data(tokenizer.encode(data_to_process['Text'][i], add_special_tokens=False), config, tokenizer))
+        input_ids.append(add_padding_data(tokenizer.encode(data_to_process['Text'][i], add_special_tokens=False), config, tokenizer, is_train=True))
         label_id.append(tokenizer.encode(data_to_process['Summary'][i]))  
         dec_input_id = tokenizer('<s>')['input_ids']
         dec_input_id += label_id[i]
-        dec_input_ids.append(add_padding_data(dec_input_id, config, tokenizer))
+        dec_input_ids.append(add_padding_data(dec_input_id, config, tokenizer, is_train=False))
         label_ids.append(add_ignored_data(label_id[i], config, input_ids[i], tokenizer))
 
     return {'input_ids': input_ids,
