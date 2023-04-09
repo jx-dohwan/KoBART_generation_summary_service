@@ -55,24 +55,32 @@ def data_process(data):
     return text
 
 
-def add_ignored_data(inputs, config, corrupt_token, tokenizer):
-  none_mask = []
-  corrupt_token = [x for x in corrupt_token if x != tokenizer.pad_token_id]
-  for i in range(len(corrupt_token)):
-      if corrupt_token[i] != tokenizer.mask_token_id:
-          none_mask.append(i)
-  for mask_num in none_mask:
-      inputs[mask_num] = config.ignore_index
-  if len(inputs) < config.max_len:
-      pad = [config.ignore_index] *(config.max_len - len(inputs)) # ignore_index즉 -100으로 패딩을 만들 것인데 max_len - lne(inpu)
-      inputs = np.concatenate([inputs, pad])
+def add_ignored_data(inputs, config, corrupt_token, tokenizer, is_mlm=False):
+  if is_mlm:
+      none_mask = []
+      corrupt_token = [x for x in corrupt_token if x != tokenizer.pad_token_id]
+      for i in range(len(corrupt_token)):
+          if corrupt_token[i] != tokenizer.mask_token_id:
+              none_mask.append(i)
+      for mask_num in none_mask:
+          inputs[mask_num] = config.ignore_index
+      if len(inputs)+1 < config.max_len:
+          pad = [config.ignore_index] * (config.max_len - (len(inputs)+1)) # ignore_index즉 -100으로 패딩을 만들 것인데 max_len - lne(inpu)
+          inputs = np.concatenate([inputs, [tokenizer.eos_token_id], pad])
+      else:
+          inputs = inputs + [tokenizer.eos_token_id]
+          inputs = inputs[:config.max_len]
   else:
-      inputs = inputs[:config.max_len]
+      if len(inputs)+1 < config.max_len:
+          pad = [config.ignore_index] *(config.max_len - (len(inputs)+1)) # ignore_index즉 -100으로 패딩을 만들 것인데 max_len - lne(inpu)
+          inputs = np.concatenate([inputs, [tokenizer.eos_token_id], pad])
+      else:
+          inputs = inputs + [tokenizer.eos_token_id]
+          inputs = inputs[:config.max_len]
 
   return inputs
 
 def add_padding_data(inputs, config, tokenizer, is_mlm=False):
-
     if is_mlm:
         mask_num = int(len(inputs)*config.masking_rate)
         mask_positions = random.sample([x for x in range(len(inputs))], mask_num)
@@ -109,14 +117,21 @@ def preprocess_data(data_to_process, tokenizer, config):
     for i in range(len(data_to_process['Text'])):
         input_ids.append(add_padding_data(tokenizer.encode(data_to_process['Text'][i], add_special_tokens=False), config, tokenizer, is_mlm=True))
         label_id.append(tokenizer.encode(data_to_process['Text'][i]))  
-        label_id[i].append(tokenizer.eos_token_id) 
         dec_input_id = tokenizer('<s>')['input_ids']
-        dec_input_id += label_id[i][:-1]
+        dec_input_id += label_id[i]
         dec_input_ids.append(add_padding_data(dec_input_id, config, tokenizer))
-        label_ids.append(add_ignored_data(label_id[i], config, input_ids[i], tokenizer))
-        
+        label_ids.append(add_ignored_data(label_id[i], config, input_ids[i], tokenizer, is_mlm=False))
+    """
+    return {'input_ids': input_ids,
+            'attention_mask' : (np.array(input_ids) != tokenizer.pad_token_id).astype(int),
+            'decoder_input_ids': dec_input_ids,
+            'decoder_attention_mask': (np.array(dec_input_ids) != tokenizer.pad_token_id).astype(int),
+            'labels': label_ids
+            }
+    """
     return {'input_ids': torch.tensor(input_ids),
             'attention_mask' : torch.tensor((np.array(input_ids) != tokenizer.pad_token_id).astype(int)),
             'decoder_input_ids': torch.tensor(dec_input_ids),
             'decoder_attention_mask': torch.tensor((np.array(dec_input_ids) != tokenizer.pad_token_id).astype(int)),
-            'labels': torch.tensor(label_ids)}
+            'labels': torch.tensor(label_ids)
+            }
