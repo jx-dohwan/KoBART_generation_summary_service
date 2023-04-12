@@ -73,7 +73,7 @@ docker run -d -p 3000:3000 flask
 |[전처리 속도 개선](https://github.com/jx-dohwan/KoBART_generation_summary_service/blob/main/Serving/preprocessor.py)|100%|
 |[도커 빌드](https://github.com/jx-dohwan/KoBART_generation_summary_service/blob/main/Serving/Dockerfile)|100%|
 
-### 3. 2023.04에 추가 개선
+### 3. [2023.04에 추가 개선](https://github.com/jx-dohwan/KoBART_generation_summary_service/tree/main/Script_code) 
 |기존 서비스|개선 서비스|진행사항(%)|
 |:---------:|:----------:|:------:|
 |.ipynb로 구현|.py로 현업에 맞게 재구현|100%|
