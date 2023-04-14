@@ -82,8 +82,9 @@ def add_ignored_data(inputs, config, corrupt_token, tokenizer, is_mlm=False):
 
 def add_padding_data(inputs, config, tokenizer, is_mlm=False):
     if is_mlm:
+        """
         mask_num = int(len(inputs)*config.masking_rate)
-        mask_positions = random.sample([x for x in range(len(inputs))], mask_num)
+        mask_positions = random.sample([x for x in range(len(inputs))], mask_num)   
 
         corrupt_token = []
 
@@ -98,6 +99,17 @@ def add_padding_data(inputs, config, tokenizer, is_mlm=False):
             inputs = np.concatenate([corrupt_token, pad])
         else:
             inputs = corrupt_token[:config.max_len]
+        """
+        masked_index = torch.rand(len(inputs)) < config.masking_rate
+        for i, m in enumerate(masked_index):
+            if m:
+                inputs[i] = tokenizer.mask_token_id
+        if len(inputs) < config.max_len:
+            pad = [tokenizer.pad_token_id] * (config.max_len - len(inputs))
+            inputs = np.concatenate([inputs, pad])
+        else:
+            inputs = inputs[:config.max_len]
+        
     else:
         if len(inputs) < config.max_len:
             pad = [tokenizer.pad_token_id] * (config.max_len - len(inputs))
@@ -120,7 +132,7 @@ def preprocess_data(data_to_process, tokenizer, config):
         dec_input_id = tokenizer('<s>')['input_ids']
         dec_input_id += label_id[i]
         dec_input_ids.append(add_padding_data(dec_input_id, config, tokenizer))
-        label_ids.append(add_ignored_data(label_id[i], config, input_ids[i], tokenizer, is_mlm=False))
+        label_ids.append(add_ignored_data(label_id[i], config, input_ids[i], tokenizer, is_mlm=True))
     """
     return {'input_ids': input_ids,
             'attention_mask' : (np.array(input_ids) != tokenizer.pad_token_id).astype(int),
@@ -135,3 +147,4 @@ def preprocess_data(data_to_process, tokenizer, config):
             'decoder_attention_mask': torch.tensor((np.array(dec_input_ids) != tokenizer.pad_token_id).astype(int)),
             'labels': torch.tensor(label_ids)
             }
+    
