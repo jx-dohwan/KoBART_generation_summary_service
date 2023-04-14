@@ -16,9 +16,6 @@ from transformers import (
     Seq2SeqTrainer,
     DataCollatorForSeq2Seq,
     AutoModelForMaskedLM,
-
-
-
 )
 import torch.nn as nn
 from functools import partial
@@ -47,7 +44,8 @@ def define_argparser():
     p.add_argument('--length_penalty', type=float, default=2.0)
     p.add_argument('--ignore_index', type=int, default=-100)
     p.add_argument('--max_len', type=int, default=128)
-    p.add_argument('--batch_size', type=int, default=128)
+    p.add_argument('--train_batch_size', type=int, default=128)
+    p.add_argument('--valid_batch_size', type=int, default=256)
     p.add_argument('--lr', type=float, default=3e-05)
     p.add_argument('--weight_decay', type=float, default=0.1)
     p.add_argument('--masking_rate', type=float, default=0.15)
@@ -82,7 +80,7 @@ def main(config):
         if config.valid_fn + '/.ipynb_checkpoints' != fnv:
             val_full_filename.append(fnv)
 
-    train_dataset = data_load(train_full_filename, True)
+    train_dataset = data_load(train_full_filename)
     train_list = data_process(train_dataset)
 
     val_dataset = data_load(val_full_filename)
@@ -120,15 +118,15 @@ def main(config):
     model.config.num_beams = config.num_beams
 
     ## train
-    n_warmup_steps = int(len(train_tokenize_data) * config.warmup_ratio)
+    #n_warmup_steps = int(len(train_tokenize_data) * config.warmup_ratio)
    
     training_args = Seq2SeqTrainingArguments(
         output_dir=config.save_fn + "/checkpoint",
         num_train_epochs=config.epochs,  # demo
         do_train=config.do_train,
         do_eval=config.do_eval,
-        per_device_train_batch_size=config.batch_size,  
-        per_device_eval_batch_size=config.batch_size,
+        per_device_train_batch_size=config.train_batch_size,  
+        per_device_eval_batch_size=config.valid_batch_size,
         learning_rate=config.lr,
         weight_decay=config.weight_decay,
         predict_with_generate=config.predict_with_generate, # 생성기능을 사용하고 싶다고 지정한다.
@@ -138,7 +136,7 @@ def main(config):
         logging_strategy = 'epoch',
         evaluation_strategy  = 'epoch',
         save_strategy ='epoch',
-        warmup_steps=n_warmup_steps,
+        # warmup_steps=n_warmup_steps,
 
     )
     # 이거쓰면 torch.tensor안해도됨
@@ -155,8 +153,6 @@ def main(config):
     
     trainer.train()
     
-
-
 
 if __name__ == '__main__':
     config = define_argparser()
